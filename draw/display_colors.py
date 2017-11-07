@@ -12,12 +12,11 @@ import argparse as ap
 from math import sqrt, ceil
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
-from matplotlib.collections import PatchCollection
 
 
 AUTHOR = 'luyulinvip@qq.com'
-VERSION = 'v0.1'
-DATE = '2017.9.11'
+VERSION = 'v0.2'
+DATE = '2017.11.07'
 SCRIPTDIR, SCRIPTNAME = os.path.split(os.path.abspath(sys.argv[0]))
 
 DESCRIPTION = """
@@ -57,6 +56,8 @@ def arg_parse():
     arg("color", help="color file")
     arg("figure", help="figure")
     arg("--matrix", help="show color at N*N matrix", action="store_true")
+    arg("--fig_width", help="figure width (default=4)", default=4, metavar="int", type=int)
+    arg("--font_size", help="font size of label (default=1)", default=1, metavar="int", type=int)
     args = parser.parse_args()
     return args
 
@@ -69,7 +70,7 @@ def main():
     else:
         colors_list = line_data(args.color)
 
-    fig = show_colors(colors_list)
+    fig = show_colors(colors_list, fig_width=args.fig_width, font_size=args.font_size)
 
     fig.savefig(args.figure)
 
@@ -102,7 +103,7 @@ def matrix_data(colors_file):
     return colors_list
 
 
-def show_colors(colors_list):
+def show_colors(colors_list, fig_width=4, font_size=1):
 
     cnum = sum(map(len, colors_list))
     colors = [j for i in colors_list for j in i]
@@ -110,8 +111,7 @@ def show_colors(colors_list):
     ncols = max(map(len, colors_list))
     nrows = len(colors_list)
 
-    fig_width = 8
-    fig_height = 8 / ncols * nrows
+    fig_height = fig_width / ncols * nrows
 
     fig, ax = plt.subplots(figsize=(fig_width,fig_height))
 
@@ -119,15 +119,13 @@ def show_colors(colors_list):
     h = Y / nrows
     w = X / ncols
 
-    patches = []
+    #patches = []
     
     for i, x in enumerate(colors_list):
         for j, y in enumerate(x):
-            rect = mpatches.Rectangle([j*w, Y-(i+1)*h], w, h)
-            patches.append(rect)
-
-    collection = PatchCollection(patches, color=colors)
-    ax.add_collection(collection)
+            rect = mpatches.Rectangle([j*w, Y-(i+1)*h], w, h, color=colors[i*ncols+j], linewidth=0)
+            ax.add_patch(rect)
+            ax.text((j+0.5)*w, Y-(i+0.5)*h, colors[i*ncols+j], size=font_size, ha="center", va="center", color="k")
 
     ax.set_xlim(0, X)
     ax.set_ylim(0, Y)
