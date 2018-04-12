@@ -10,3 +10,4 @@
 ## os(系统操作)
 
 `os/dircmp.py` 比较两个文件夹内容的差异
+`os/monitorResourceByPid/monitorResource.sh` 监控某qsub任务在其它计算节点消耗的资源
