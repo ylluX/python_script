@@ -20,3 +20,5 @@
 `crawl/edu` 华夏大地教育网--高等数学
 
 `crawl/xieheba` 协和八-统计学
+
+`ghmd` 为markdown添加目录和格式化数学公式，方便github查看
